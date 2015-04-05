@@ -24,7 +24,7 @@ RSpec.describe Robot do
 		expect(@robot.send(:is_orientation_valid?, "LEFT")).to eq false	
 	end	
 
-	it "checks if string contains an integer number" do
+	it "checks if string contains an integer positive number" do
 		expect(@robot.send(:is_integer?, "-1")).to eq false
 		expect(@robot.send(:is_integer?, "1")).to eq true
 		expect(@robot.send(:is_integer?, "2")).to eq true
@@ -34,11 +34,10 @@ RSpec.describe Robot do
 	end
 
 	it 'changes the robot orientation' do
-		commands = @robot.separate_in_tokens(@full_command)
-		@robot.execute(commands)
+		@robot.execute(@full_command)
 	end
 
-	it "checks and places the robot if the types position is not out of the matrix range" do
+	it "places the robot if the typed position is not out of the matrix range" do
 		expect(@robot.send(:place_in, 0, 0)).to eq true
 		expect(@robot.send(:place_in, 1, 1)).to eq true
 		expect(@robot.send(:place_in, 4, 7)).to eq false
@@ -47,5 +46,14 @@ RSpec.describe Robot do
 		expect(@robot.send(:place_in, 3, 3)).to eq true
 		expect(@robot.send(:place_in, 4, 4)).to eq true
 		expect(@robot.send(:place_in, 5, 5)).to eq false
+	end
+
+	it "moves the robot from the SOUTH direction" do
+		@robot.execute("PLACE 0,0,SOUTH")
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 1 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 2 
 	end
 end

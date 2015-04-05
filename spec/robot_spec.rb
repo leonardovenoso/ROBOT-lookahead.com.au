@@ -4,7 +4,7 @@ require_relative '../robot'
 
 RSpec.describe Robot do 
 	before do
-		@full_command = 'PLACE 0,11,NORTH WEST'
+		@full_command = 'PLACE 0,0,NORTH WEST'
 		@robot = Robot.new
 	end
 
@@ -35,6 +35,7 @@ RSpec.describe Robot do
 	end	
 
 	it "checks that an string contains an integer number" do
+		expect(@robot.send(:is_integer?, "-1")).to eq false
 		expect(@robot.send(:is_integer?, "1")).to eq true
 		expect(@robot.send(:is_integer?, "2")).to eq true
 		expect(@robot.send(:is_integer?, " ")).to eq false

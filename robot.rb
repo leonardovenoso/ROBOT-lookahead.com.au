@@ -21,8 +21,6 @@ class Robot
 		@table = Array.new(5) {Array.new(5,0)}
   end
 
-	
-
 
 	def separate_in_tokens(commands)
 		commands.upcase!		
@@ -34,9 +32,10 @@ class Robot
 		case commands[0]
 			when "PLACE"
 				new_orientation = commands[3].to_s + " " + commands[4].to_s
-				binding.pry
 			  if is_integer?(commands[1]) and is_integer?(commands[2]) and is_orientation_valid?(new_orientation)
 			  	@current_orientation = new_orientation
+			  	@current_position_x = commands[1].to_i
+			  	@current_position_y = commands[2].to_i
 			  end
 			when "MOVE"
 			  puts "MOVE"
@@ -55,6 +54,6 @@ class Robot
 		end
 
  		def is_integer?(number)
-       !!(number =~ /\A[-+]?[0-9]+\z/)
+       !!(number =~ /\A[+]?[0-9]+\z/)
     end		
 end

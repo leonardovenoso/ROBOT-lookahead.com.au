@@ -48,12 +48,39 @@ RSpec.describe Robot do
 		expect(@robot.send(:place_in, 5, 5)).to eq false
 	end
 
-	it "moves the robot from the SOUTH direction" do
+	it "moves the robot from 0,0 to the SOUTHest direction" do
 		@robot.execute("PLACE 0,0,SOUTH")
 		@robot.execute("MOVE")
-		expect(@robot.current_position_y).to eq 1 
+		expect(@robot.current_position_x).to eq 1 
 
 		@robot.execute("MOVE")
-		expect(@robot.current_position_y).to eq 2 
+		expect(@robot.current_position_x).to eq 2 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 3 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 4
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 4		 
 	end
+
+	it "moves the robot from 4,0 to the NORTHest direction" do
+		@robot.execute("PLACE 4,0,NORTH")
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 3 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 2 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 1 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 0
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 0		 
+	end	
 end

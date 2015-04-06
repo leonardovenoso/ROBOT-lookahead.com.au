@@ -54,11 +54,11 @@ class Robot
 		def move
 			case @current_orientation
 				when orientation[:north]
+						place_in(@current_position_x - 1, @current_position_y)
 				when orientation[:north_west]
 				when orientation[:north_east]	
-
 				when orientation[:south]					
-					place_in(@current_position_x, @current_position_y + 1)
+					place_in(@current_position_x + 1, @current_position_y)
 				when orientation[:south_west]
 				when orientation[:south_east]	
 
@@ -90,6 +90,8 @@ class Robot
 					print "#{@table[i][j]}\t"
 				end
 			end		
+
+			print "\n"
 		end
 
 		def is_orientation_valid?(orientation_command)

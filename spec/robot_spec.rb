@@ -116,7 +116,7 @@ RSpec.describe Robot do
 		expect(@robot.current_position_y).to eq 0
 	end			
 
-	it "moves the robot from 0,0 to the EAST to SOUTH EAST direction" do
+	it "moves the robot from 0,0 to SOUTH EAST direction" do
 		@robot.execute("PLACE 0,0,SOUTH EAST")
 		@robot.execute("MOVE")
 		expect(@robot.current_position_y).to eq 1
@@ -133,5 +133,41 @@ RSpec.describe Robot do
 		@robot.execute("MOVE")
 		expect(@robot.current_position_y).to eq 4
 	end			
+
+	it "moves the robot from 0,0 SOUTH WEST direction" do
+		@robot.execute("PLACE 0,4,SOUTH WEST")
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 3
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 2
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 1 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 0
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 0
+	end	
+
+		it "moves the robot from 4,0 NORTH EAST direction" do
+		@robot.execute("PLACE 4,0,NORTH EAST")
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 3
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 2
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 1 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 0
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_x).to eq 0
+	end				
 
 end

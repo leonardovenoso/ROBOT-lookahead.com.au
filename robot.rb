@@ -51,16 +51,19 @@ class Robot
 			commands.scan(/[(A-Za-z)|(!0-5)]*\w/)
 		end
 
+		# TODO: make it dry!
 		def move
 			case @current_orientation
 				when orientation[:north]
 						place_in(@current_position_x - 1, @current_position_y)
 				when orientation[:north_west]
 				when orientation[:north_east]	
-				when orientation[:south]					
+					place_in(@current_position_x - 1, @current_position_y + 1)
+				when orientation[:south]
 					place_in(@current_position_x + 1, @current_position_y)
 				when orientation[:south_west]
-				when orientation[:south_east]	
+					place_in(@current_position_x + 1, @current_position_y - 1)
+				when orientation[:south_east]
 					place_in(@current_position_x + 1, @current_position_y + 1)
 				when orientation[:east]
 					place_in(@current_position_x, @current_position_y - 1)					

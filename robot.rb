@@ -61,9 +61,11 @@ class Robot
 					place_in(@current_position_x + 1, @current_position_y)
 				when orientation[:south_west]
 				when orientation[:south_east]	
-
+					place_in(@current_position_x + 1, @current_position_y + 1)
 				when orientation[:east]
+					place_in(@current_position_x, @current_position_y - 1)					
 				when orientation[:west]	
+					place_in(@current_position_x, @current_position_y + 1)
 			end
 		end
 

@@ -13,28 +13,24 @@ RSpec.describe Robot do
 		expect(tokens.size).to eq 5
 	end
 
-	it 'validates orientation with a valid attribute' do
+	it 'validates orientation with a valid parameter' do
 		expect(@robot.send(:is_orientation_valid?, "NORTH")).to eq true
 		expect(@robot.send(:is_orientation_valid?, "SOUTH")).to eq true		
 	end	
 
-	it 'validates orientation with a not valid attribute' do
+	it 'validates orientation with a not valid parameter' do
 		expect(@robot.send(:is_orientation_valid?, "NORTH SOUTH")).to eq false
 		expect(@robot.send(:is_orientation_valid?, "NORT SOUTH")).to eq false	
 		expect(@robot.send(:is_orientation_valid?, "LEFT")).to eq false	
 	end	
 
-	it "checks if string contains an integer positive number" do
+	it "checks if string contains an integer positive coordinate" do
 		expect(@robot.send(:is_integer?, "-1")).to eq false
 		expect(@robot.send(:is_integer?, "1")).to eq true
 		expect(@robot.send(:is_integer?, "2")).to eq true
 		expect(@robot.send(:is_integer?, " ")).to eq false
 		expect(@robot.send(:is_integer?, nil)).to eq false
 		expect(@robot.send(:is_integer?, "a")).to eq false
-	end
-
-	it 'changes the robot orientation' do
-		@robot.execute(@full_command)
 	end
 
 	it "places the robot if the typed position is not out of the matrix range" do
@@ -83,4 +79,59 @@ RSpec.describe Robot do
 		@robot.execute("MOVE")
 		expect(@robot.current_position_x).to eq 0		 
 	end	
+
+	it "moves the robot from 0,0 to the WESTest direction" do
+		@robot.execute("PLACE 0,0,WEST")
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 1
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 2 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 3 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 4
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 4		 
+	end		
+
+	it "moves the robot from 0,4 to the EASTest direction" do
+		@robot.execute("PLACE 0,4,EAST")
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 3
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 2 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 1 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 0
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 0
+	end			
+
+	it "moves the robot from 0,0 to the EAST to SOUTH EAST direction" do
+		@robot.execute("PLACE 0,0,SOUTH EAST")
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 1
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 2
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 3 
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 4
+
+		@robot.execute("MOVE")
+		expect(@robot.current_position_y).to eq 4
+	end			
+
 end

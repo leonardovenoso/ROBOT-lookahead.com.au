@@ -18,23 +18,6 @@ class Robot
 			south_east: { x: 1, y: 1 }
 		}
 
-				# 		when orientation[:north]
-				# 	place_in(@current_position_x - 1, @current_position_y)
-				# when orientation[:north_west]
-				# 	place_in(@current_position_x + 1, @current_position_y - 1)					
-				# when orientation[:north_east]	
-				# 	place_in(@current_position_x - 1, @current_position_y + 1)
-				# when orientation[:south]
-				# 	place_in(@current_position_x + 1, @current_position_y)
-				# when orientation[:south_west]
-				# 	place_in(@current_position_x + 1, @current_position_y - 1)
-				# when orientation[:south_east]
-				# 	place_in(@current_position_x + 1, @current_position_y + 1)
-				# when orientation[:east]
-				# 	place_in(@current_position_x, @current_position_y - 1)					
-				# when orientation[:west]	
-				# 	place_in(@current_position_x, @current_position_y + 1)
-
 		@current_orientation  = ""
 		@current_position_x   = 0
 		@current_position_y   = 0
@@ -80,7 +63,7 @@ class Robot
 				@table[@current_position_x][@current_position_y] = 0
 	  		@current_position_x = x
 	  		@current_position_y = y
-	  		@table[x][y] = 1
+	  		@table[x][y] = 'X'
 				
 				print_matrix
 	  		true
@@ -90,6 +73,7 @@ class Robot
 		end
 
 		def print_matrix
+			system "clear"
 			print "\n\n----------------------------------\n\n"
 
 			for i in 0..ARRAY_SIZE_X - 1

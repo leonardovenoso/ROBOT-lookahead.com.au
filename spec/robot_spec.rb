@@ -14,14 +14,14 @@ RSpec.describe Robot do
 	end
 
 	it 'validates orientation with a valid parameter' do
-		expect(@robot.send(:is_orientation_valid?, "NORTH")).to eq true
-		expect(@robot.send(:is_orientation_valid?, "SOUTH")).to eq true		
+		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "NORTH") )).to eq true
+		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "SOUTH") )).to eq true		
 	end	
 
 	it 'validates orientation with a not valid parameter' do
-		expect(@robot.send(:is_orientation_valid?, "NORTH SOUTH")).to eq false
-		expect(@robot.send(:is_orientation_valid?, "NORT SOUTH")).to eq false	
-		expect(@robot.send(:is_orientation_valid?, "LEFT")).to eq false	
+		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "NORTH SOUTH") )).to eq false
+		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "NORT SOUTH") )).to eq false	
+		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "LEFT") )).to eq false	
 	end	
 
 	it "checks if string contains an integer positive coordinate" do

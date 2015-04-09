@@ -98,22 +98,22 @@ RSpec.describe Robot do
 		expect(@robot.current_position_y).to eq 4		 
 	end		
 
-	it "moves the robot from 0,4 to the EASTest direction" do
-		@robot.execute("PLACE 0,4,EAST")
+	it "moves the robot from 0,0 to the EASTest direction" do
+		@robot.execute("PLACE 0,0,EAST")
 		@robot.execute("MOVE")
-		expect(@robot.current_position_y).to eq 3
+		expect(@robot.current_position_y).to eq 1
 
 		@robot.execute("MOVE")
 		expect(@robot.current_position_y).to eq 2 
 
 		@robot.execute("MOVE")
-		expect(@robot.current_position_y).to eq 1 
+		expect(@robot.current_position_y).to eq 3 
 
 		@robot.execute("MOVE")
-		expect(@robot.current_position_y).to eq 0
+		expect(@robot.current_position_y).to eq 4
 
 		@robot.execute("MOVE")
-		expect(@robot.current_position_y).to eq 0
+		expect(@robot.current_position_y).to eq 4
 	end			
 
 	it "moves the robot from 0,0 to SOUTH EAST direction" do
@@ -187,4 +187,10 @@ RSpec.describe Robot do
 		@robot.execute("MOVE")
 		expect(@robot.current_position_x).to eq 4
 	end	
+
+	it "changes to the next orientation from north west to" do
+		@robot.execute("PLACE 4,0,NORTH WEST")
+		@robot.execute("RIGHT")
+		expect(@robot.current_orientation).to eq :north
+	end
 end

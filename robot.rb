@@ -5,17 +5,18 @@ class Robot
 
 	ARRAY_SIZE_X = 5
 	ARRAY_SIZE_Y = 5
+	command_counter = 0
 
   def initialize
 		@orientation = { 
 			north: { x: -1 }, 
-			north_west: { x: 1, y: -1 }, 
 			north_east: { x: -1, y: 1 },
-			east: { y: -1 },
-			west: { y: 1 },
+			east: { y: 1 },
+			south_east: { x: 1, y: 1 },
 			south: { x: 1 }, 
 			south_west: { x: 1, y: -1 },
-			south_east: { x: 1, y: 1 }
+			west: { y: 1 },
+			north_west: { x: 1, y: -1 }
 		}
 
 		@current_orientation  = ""
@@ -27,7 +28,7 @@ class Robot
   # TODO: FIRST orientation should be NORTH, WEST, SOUTH, EAST
 	def execute(commands_str)
 		commands = separate_in_tokens(commands_str)
-		case commands[0]
+		case commands[0].upcase
 			when "PLACE"
 				new_orientation_symbol = string_to_symbol(commands[3].to_s + " " + commands[4].to_s)
 			  if is_integer?(commands[1]) and is_integer?(commands[2]) and is_orientation_symbol_valid?(new_orientation_symbol)
@@ -36,16 +37,32 @@ class Robot
 			  end
 			when "MOVE"
 			  move
-			when "LEFT"
-			  puts "LEFT"
+			when "LEFT"				
+				rotate -2 # 2=90 degrees, 1=45
 			when "RIGHT"
-				puts "RIGHT"
+				rotate 2						
 			when "REPORT"
-				puts "REPORT"			
+				report
 		end
 	end
 
 	private
+		def report
+			puts "REPORT: (#{@current_position_x}, #{current_position_y}) #{@current_orientation}"
+		end
+
+		def abbreviate(orientation_symbol)
+			orientation_symbol.to_s.split("_").map {|orientation| orientation[0].chr }.join.upcase
+		end
+
+		def rotate(direction)
+			orientation_keys = @orientation.keys
+			orientation_index = orientation_keys.index(@current_orientation) + direction
+			@current_orientation = orientation_keys[orientation_index].nil? ? orientation_keys[0] : orientation_keys[orientation_index]
+			@table[@current_position_x][@current_position_y] = abbreviate(@current_orientation)
+			print_matrix
+		end
+
 		def separate_in_tokens(commands)
 			commands.upcase!		
 			commands.scan(/[(A-Za-z)|(!0-5)]*\w/)
@@ -63,27 +80,14 @@ class Robot
 				@table[@current_position_x][@current_position_y] = 0
 	  		@current_position_x = x
 	  		@current_position_y = y
-	  		@table[x][y] = 'X'
+	  		abbreviation = abbreviate(@current_orientation)
+	  		@table[x][y] = abbreviation.empty? ? 'x' : abbreviation
 				
 				print_matrix
 	  		true
 	  	else
 	  		false	
 	  	end	
-		end
-
-		def print_matrix
-			system "clear"
-			print "\n\n----------------------------------\n\n"
-
-			for i in 0..ARRAY_SIZE_X - 1
-				print "\n"
-				for j in 0..ARRAY_SIZE_Y - 1
-					print "#{@table[i][j]}\t"
-				end
-			end		
-
-			print "\n"
 		end
 
 		def is_orientation_symbol_valid?(orientation_command)
@@ -96,5 +100,21 @@ class Robot
 
  		def is_integer?(number)
     	!!(number =~ /\A[+]?[0-9]+\z/)
-    end		
+    end	
+
+		def print_matrix
+			system "clear"
+			for x in 0..ARRAY_SIZE_X-1
+				print "#{x}\t"
+			end
+			print "\n----------------------------------\n"
+			for i in 0..ARRAY_SIZE_X - 1
+				print "\n"
+				for j in 0..ARRAY_SIZE_Y - 1
+					print "#{@table[i][j]}\t"
+				end
+			end		
+
+			print "\n"
+		end    	
 end

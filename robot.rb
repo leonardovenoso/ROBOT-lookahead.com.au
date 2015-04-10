@@ -104,6 +104,7 @@ class Robot
 
 		def print_matrix
 			system "clear"
+			print "\n"
 			for x in 0..ARRAY_SIZE_X-1
 				print "#{x}\t"
 			end

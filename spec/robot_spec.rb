@@ -193,4 +193,8 @@ RSpec.describe Robot do
 		@robot.execute("RIGHT")
 		expect(@robot.current_orientation).to eq :north
 	end
+
+	it "checks that the first command executed is a valid place" do
+		
+	end
 end

@@ -1,11 +1,10 @@
 require 'pry'
 
 class Robot
-	attr_accessor :orientation, :current_position_x, :current_position_y, :current_orientation
+	attr_accessor :orientation, :current_position_x, :current_position_y, :current_orientation, :executed_valid_place_command
 
 	ARRAY_SIZE_X = 5
 	ARRAY_SIZE_Y = 5
-	command_counter = 0
 
   def initialize
 		@orientation = { 
@@ -23,6 +22,7 @@ class Robot
 		@current_position_x   = 0
 		@current_position_y   = 0
 		@table = Array.new(ARRAY_SIZE_Y) {Array.new(ARRAY_SIZE_X,0)}
+		@executed_valid_place_command = false
   end
 
   # TODO: FIRST orientation should be NORTH, WEST, SOUTH, EAST
@@ -34,19 +34,24 @@ class Robot
 			  if is_integer?(commands[1]) and is_integer?(commands[2]) and is_orientation_symbol_valid?(new_orientation_symbol)
 			  	@current_orientation = new_orientation_symbol
 			  	place_in(commands[1].to_i, commands[2].to_i)
+			  	@executed_valid_place_command = true
 			  end
 			when "MOVE"
-			  move
+			  move if is_executed_valid_place_command?
 			when "LEFT"				
-				rotate -2 # 2=90 degrees, 1=45
+				rotate -2 if is_executed_valid_place_command? # 2=90 degrees, 1=45
 			when "RIGHT"
-				rotate 2						
+				rotate 2 if is_executed_valid_place_command?						
 			when "REPORT"
-				report
+				report if is_executed_valid_place_command?
 		end
 	end
 
 	private
+		def is_executed_valid_place_command?
+			executed_valid_place_command
+		end
+		
 		def report
 			puts "REPORT: (#{@current_position_x}, #{current_position_y}) #{@current_orientation}"
 		end

@@ -194,7 +194,13 @@ RSpec.describe Robot do
 		expect(@robot.current_orientation).to eq :north
 	end
 
-	it "checks that the first command executed is a valid place" do
-		
+	it "checks (with a valid place command) that the first command executed is a valid place" do
+		@robot.execute("PLACE 4,0,NORTH WEST")
+		expect(@robot.send(:is_executed_valid_place_command?)).to eq true
+	end
+
+	it "checks (with an invalid place command) that the first command executed is a valid place" do
+		@robot.execute("MOVE")
+		expect(@robot.send(:is_executed_valid_place_command?)).to eq false
 	end
 end

@@ -2,82 +2,93 @@ require 'pry'
 require_relative 'base'
 require_relative 'command_recognizer'
 
-
 class Robot < Base
+  def initialize
+    super
+    @command_recognizer = CommandRecognizer.new
+  end
 
-	def initialize
-		super
-		@command_recognizer = CommandRecognizer.new
-	end
+  # Params:
+  # - command_str: PLACE 0,0,NORTH / move / LEFT / right / REPORT
+  def execute(command_str)
+    command_hash = @command_recognizer.get_params(command_str)
+    command = command_hash[:command]
+    options = command_hash[:options]
 
-	# Params:
-	# - command_str: PLACE 0,0,NORTH / move / LEFT / right / REPORT
-	def execute(command_str)
-		command_hash = @command_recognizer.get_hash_with_command_and_parameters(command_str)
-		command = command_hash[:command]
-		options = command_hash[:options]
+    if options.nil?
+      send(command)
+    else
+      send(command, options)
+    end
+  end
 
-		if options.nil?
-			send(command)
-		else
-			send(command, options)			
-		end
-	end
+  private
 
-	private
-		def left
-			rotate(-2)
-		end
+  def left
+    rotate(-2)
+  end
 
-		def right
-			rotate(2)
-		end
+  def right
+    rotate(2)
+  end
 
-		# Params:
-		# - direction: -2 or 2
-		def rotate(direction)
-			return unless was_executed_valid_place_command?	
+  def exit
+    Kernel.exit!
+  end
 
-			orientation_keys = orientation.keys
-			orientation_index = orientation_keys.index(@current_orientation) + direction
-			@current_orientation = orientation_keys[orientation_index].nil? ? orientation_keys[0] : orientation_keys[orientation_index]
-			@table[@current_position_x][@current_position_y] = abbreviate(@current_orientation)
+  # Params:
+  # - direction: -2 or 2
+  def rotate(direction)
+    return unless was_executed_valid_place_command?
 
-			print_table
-		end
+    orientation_keys = orientation.keys
+    orientation_index = orientation_keys.index(@current_orientation) + direction
+    @current_orientation = orientation_keys[orientation_index].nil? ? orientation_keys[0] : orientation_keys[orientation_index]
+    @table[@current_position_x][@current_position_y] = abbreviate(@current_orientation)
 
-		def move
-			return unless was_executed_valid_place_command?	
+    print_table
+  end
 
-			x = orientation[@current_orientation][:x].nil? ? @current_position_x : @current_position_x + orientation[@current_orientation][:x]
-			y = orientation[@current_orientation][:y].nil? ? @current_position_y : @current_position_y + orientation[@current_orientation][:y]
+  def move
+    return unless was_executed_valid_place_command?
 
-			options = { x: x, y: y }
-			place(options)
-		end
+    x = next_x_to_move
+    y = next_y_to_move
 
-		# PARAMS:
-		# - options: {x: 1, y: 1, orientation: :NORTH}
-		def place(options)	
-			x = options[:x]
-			y = options[:y]
+    place(x: x, y: y)
+  end
 
-	  	@current_orientation = options[:orientation] unless options[:orientation].nil?
-	  	@executed_valid_place_command = true
+  # PARAMS:
+  # - options: {x: 1, y: 1, orientation: :NORTH}
+  def place(options)
+    x, y = options[:x], options[:y]
+    @current_orientation = options[:orientation] unless options[:orientation].nil?
 
-			if x < ARRAY_SIZE_X and x >= 0 and y < ARRAY_SIZE_Y and y >= 0 
-				@table[@current_position_x][@current_position_y] = 0
+    if x < ARRAY_SIZE_X && x >= 0 && y < ARRAY_SIZE_Y && y >= 0
+      set_current_position(x, y)
+      @executed_valid_place_command = true
+      print_table
+      true
+    else
+      false
+    end
+  end
 
-	  		@current_position_x = x
-	  		@current_position_y = y
+  def set_current_position(x, y)
+    @table[@current_position_x][@current_position_y] = 0
 
-	  		abbreviation = abbreviate(@current_orientation)
-	  		@table[x][y] = abbreviation.empty? ? 'x' : abbreviation
-				
-				print_table
-	  		true
-	  	else
-	  		false	
-	  	end	
-		end
+    @current_position_x = x
+    @current_position_y = y
+
+    abbreviation = abbreviate(@current_orientation)
+    @table[x][y] = abbreviation.empty? ? 'x' : abbreviation
+  end
+
+  def next_x_to_move
+    orientation[@current_orientation][:x].nil? ? @current_position_x : @current_position_x + orientation[@current_orientation][:x]
+  end
+
+  def next_y_to_move
+    orientation[@current_orientation][:y].nil? ? @current_position_y : @current_position_y + orientation[@current_orientation][:y]
+  end
 end

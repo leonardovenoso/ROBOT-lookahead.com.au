@@ -1,9 +1,9 @@
 require 'pry'
 require_relative 'robot'
 
-
-system "clear"
+system 'clear'
 robot = Robot.new
-while command = gets do
+
+while command = gets
   robot.execute(command)
 end

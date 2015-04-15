@@ -1,126 +1,83 @@
 require 'pry'
+require_relative 'base'
+require_relative 'command_recognizer'
 
-class Robot
-	attr_accessor :orientation, :current_position_x, :current_position_y, :current_orientation, :executed_valid_place_command
 
-	ARRAY_SIZE_X = 5
-	ARRAY_SIZE_Y = 5
+class Robot < Base
 
-  def initialize
-		@orientation = { 
-			north: { x: -1 }, 
-			north_east: { x: -1, y: 1 },
-			east: { y: 1 },
-			south_east: { x: 1, y: 1 },
-			south: { x: 1 }, 
-			south_west: { x: 1, y: -1 },
-			west: { y: 1 },
-			north_west: { x: 1, y: -1 }
-		}
+	def initialize
+		super
+		@command_recognizer = CommandRecognizer.new
+	end
 
-		@current_orientation  = ""
-		@current_position_x   = 0
-		@current_position_y   = 0
-		@table = Array.new(ARRAY_SIZE_Y) {Array.new(ARRAY_SIZE_X,0)}
-		@executed_valid_place_command = false
-  end
+	# Params:
+	# - command_str: PLACE 0,0,NORTH / move / LEFT / right / REPORT
+	def execute(command_str)
+		command_hash = @command_recognizer.get_hash_with_command_and_parameters(command_str)
+		command = command_hash[:command]
+		options = command_hash[:options]
 
-  # TODO: FIRST orientation should be NORTH, WEST, SOUTH, EAST
-	def execute(commands_str)
-		commands = separate_in_tokens(commands_str)
-		case commands[0].upcase
-			when "PLACE"
-				new_orientation_symbol = string_to_symbol(commands[3].to_s + " " + commands[4].to_s)
-			  if is_integer?(commands[1]) and is_integer?(commands[2]) and is_orientation_symbol_valid?(new_orientation_symbol)
-			  	@current_orientation = new_orientation_symbol
-			  	place_in(commands[1].to_i, commands[2].to_i)
-			  	@executed_valid_place_command = true
-			  end
-			when "MOVE"
-			  move if is_executed_valid_place_command?
-			when "LEFT"				
-				rotate -2 if is_executed_valid_place_command? # 2=90 degrees, 1=45
-			when "RIGHT"
-				rotate 2 if is_executed_valid_place_command?						
-			when "REPORT"
-				report if is_executed_valid_place_command?
+		if options.nil?
+			send(command)
+		else
+			send(command, options)			
 		end
 	end
 
 	private
-		def is_executed_valid_place_command?
-			executed_valid_place_command
-		end
-		
-		def report
-			puts "REPORT: (#{@current_position_x}, #{current_position_y}) #{@current_orientation}"
+		def left
+			rotate(-2)
 		end
 
-		def abbreviate(orientation_symbol)
-			orientation_symbol.to_s.split("_").map {|orientation| orientation[0].chr }.join.upcase
+		def right
+			rotate(2)
 		end
 
+		# Params:
+		# - direction: -2 or 2
 		def rotate(direction)
-			orientation_keys = @orientation.keys
+			return unless was_executed_valid_place_command?	
+
+			orientation_keys = orientation.keys
 			orientation_index = orientation_keys.index(@current_orientation) + direction
 			@current_orientation = orientation_keys[orientation_index].nil? ? orientation_keys[0] : orientation_keys[orientation_index]
 			@table[@current_position_x][@current_position_y] = abbreviate(@current_orientation)
-			print_matrix
-		end
 
-		def separate_in_tokens(commands)
-			commands.upcase!		
-			commands.scan(/[(A-Za-z)|(!0-5)]*\w/)
+			print_table
 		end
 
 		def move
-			x = @orientation[@current_orientation][:x].nil? ? @current_position_x : @current_position_x + @orientation[@current_orientation][:x]
-			y = @orientation[@current_orientation][:y].nil? ? @current_position_y : @current_position_y + @orientation[@current_orientation][:y]
+			return unless was_executed_valid_place_command?	
 
-			place_in(x, y)
+			x = orientation[@current_orientation][:x].nil? ? @current_position_x : @current_position_x + orientation[@current_orientation][:x]
+			y = orientation[@current_orientation][:y].nil? ? @current_position_y : @current_position_y + orientation[@current_orientation][:y]
+
+			options = { x: x, y: y }
+			place(options)
 		end
 
-		def place_in(x, y)			
+		# PARAMS:
+		# - options: {x: 1, y: 1, orientation: :NORTH}
+		def place(options)	
+			x = options[:x]
+			y = options[:y]
+
+	  	@current_orientation = options[:orientation] unless options[:orientation].nil?
+	  	@executed_valid_place_command = true
+
 			if x < ARRAY_SIZE_X and x >= 0 and y < ARRAY_SIZE_Y and y >= 0 
 				@table[@current_position_x][@current_position_y] = 0
+
 	  		@current_position_x = x
 	  		@current_position_y = y
+
 	  		abbreviation = abbreviate(@current_orientation)
 	  		@table[x][y] = abbreviation.empty? ? 'x' : abbreviation
 				
-				print_matrix
+				print_table
 	  		true
 	  	else
 	  		false	
 	  	end	
 		end
-
-		def is_orientation_symbol_valid?(orientation_command)
-			@orientation.has_key?(orientation_command) == true
-		end
-
-		def string_to_symbol(str)
-			str.strip.gsub(/\s+/, "_").downcase.to_sym
-		end
-
- 		def is_integer?(number)
-    	!!(number =~ /\A[+]?[0-9]+\z/)
-    end	
-
-		def print_matrix
-			system "clear"
-			print "\n"
-			for x in 0..ARRAY_SIZE_X-1
-				print "#{x}\t"
-			end
-			print "\n----------------------------------\n"
-			for i in 0..ARRAY_SIZE_X - 1
-				print "\n"
-				for j in 0..ARRAY_SIZE_Y - 1
-					print "#{@table[i][j]}\t"
-				end
-			end		
-
-			print "\n"
-		end    	
 end

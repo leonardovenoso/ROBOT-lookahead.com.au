@@ -8,40 +8,13 @@ RSpec.describe Robot do
 		@robot = Robot.new
 	end
 
-	it 'splits the full command string in tokens' do
-		tokens = @robot.send(:separate_in_tokens, @full_command)
-		expect(tokens.size).to eq 5
-	end
-
-	it 'validates orientation with a valid parameter' do
-		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "NORTH") )).to eq true
-		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "SOUTH") )).to eq true		
-	end	
-
-	it 'validates orientation with a not valid parameter' do
-		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "NORTH SOUTH") )).to eq false
-		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "NORT SOUTH") )).to eq false	
-		expect(@robot.send(:is_orientation_symbol_valid?, @robot.send(:string_to_symbol, "LEFT") )).to eq false	
-	end	
-
-	it "checks if string contains an integer positive coordinate" do
-		expect(@robot.send(:is_integer?, "-1")).to eq false
-		expect(@robot.send(:is_integer?, "1")).to eq true
-		expect(@robot.send(:is_integer?, "2")).to eq true
-		expect(@robot.send(:is_integer?, " ")).to eq false
-		expect(@robot.send(:is_integer?, nil)).to eq false
-		expect(@robot.send(:is_integer?, "a")).to eq false
-	end
-
 	it "places the robot if the typed position is not out of the matrix range" do
-		expect(@robot.send(:place_in, 0, 0)).to eq true
-		expect(@robot.send(:place_in, 1, 1)).to eq true
-		expect(@robot.send(:place_in, 4, 7)).to eq false
-		expect(@robot.send(:place_in, 10, 10)).to eq false
-		expect(@robot.send(:place_in, 3, 1)).to eq true
-		expect(@robot.send(:place_in, 3, 3)).to eq true
-		expect(@robot.send(:place_in, 4, 4)).to eq true
-		expect(@robot.send(:place_in, 5, 5)).to eq false
+		expect(@robot.send(:place, { x: 0, y: 0 })).to eq true
+		expect(@robot.send(:place, { x: 1, y: 1 })).to eq true
+		expect(@robot.send(:place, { x: 4, y: 4 })).to eq true
+		expect(@robot.send(:place, { x: 4, y: 7 })).to eq false
+		expect(@robot.send(:place, { x: 10, y: 10 })).to eq false
+		expect(@robot.send(:place, { x: 5, y: 5 })).to eq false
 	end
 
 	it "moves the robot from 0,0 to the SOUTHest direction" do
@@ -196,11 +169,11 @@ RSpec.describe Robot do
 
 	it "checks (with a valid place command) that the first command executed is a valid place" do
 		@robot.execute("PLACE 4,0,NORTH WEST")
-		expect(@robot.send(:is_executed_valid_place_command?)).to eq true
+		expect(@robot.send(:was_executed_valid_place_command?)).to eq true
 	end
 
 	it "checks (with an invalid place command) that the first command executed is a valid place" do
 		@robot.execute("MOVE")
-		expect(@robot.send(:is_executed_valid_place_command?)).to eq false
+		expect(@robot.send(:was_executed_valid_place_command?)).to eq false
 	end
 end

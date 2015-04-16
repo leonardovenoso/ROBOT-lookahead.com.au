@@ -1,5 +1,5 @@
 class Print
-  def table(array_size_x, array_size_y, matrix)
+  def board(array_size_x, array_size_y, matrix)
     system 'clear'
     print_header(array_size_x)
     print_table(array_size_x, array_size_y, matrix)

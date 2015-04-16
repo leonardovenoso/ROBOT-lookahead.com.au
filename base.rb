@@ -1,5 +1,6 @@
 require_relative 'modules/orientation'
 require_relative 'print'
+require_relative 'table'
 require_relative 'modules/Utils'
 
 class Base
@@ -21,7 +22,8 @@ class Base
     @current_position_x   = 0
     @current_position_y   = 0
 
-    @table = Array.new(ARRAY_SIZE_X) { Array.new(ARRAY_SIZE_Y, 0) }
+    #@table = Array.new(ARRAY_SIZE_X) { Array.new(ARRAY_SIZE_Y, 0) }
+    @table = Table.new(5, 5)
     @executed_valid_place_command = false
     @print = Print.new
   end
@@ -30,8 +32,8 @@ class Base
     @executed_valid_place_command
   end
 
-  def print_table
-    @print.table(ARRAY_SIZE_X, ARRAY_SIZE_Y, @table)
+  def print_board
+    @print.board(@table.limit_x, @table.limit_y, @table.board)
   end
 
   def report

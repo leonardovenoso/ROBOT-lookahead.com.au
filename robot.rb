@@ -44,9 +44,9 @@ class Robot < Base
     orientation_keys = orientation.keys
     orientation_index = orientation_keys.index(@current_orientation) + direction
     @current_orientation = orientation_keys[orientation_index].nil? ? orientation_keys[0] : orientation_keys[orientation_index]
-    @table[@current_position_x][@current_position_y] = abbreviate(@current_orientation)
+    @table.board[@current_position_x][@current_position_y] = abbreviate(@current_orientation)
 
-    print_table
+    print_board
   end
 
   def move
@@ -64,10 +64,10 @@ class Robot < Base
     x, y = options[:x], options[:y]
     @current_orientation = options[:orientation] unless options[:orientation].nil?
 
-    if x < ARRAY_SIZE_X && x >= 0 && y < ARRAY_SIZE_Y && y >= 0
+    if x < @table.limit_x && x >= 0 && y < @table.limit_y && y >= 0
       set_current_position(x, y)
       @executed_valid_place_command = true
-      print_table
+      print_board
       true
     else
       false
@@ -75,13 +75,13 @@ class Robot < Base
   end
 
   def set_current_position(x, y)
-    @table[@current_position_x][@current_position_y] = 0
+    @table.board[@current_position_x][@current_position_y] = 0
 
     @current_position_x = x
     @current_position_y = y
 
     abbreviation = abbreviate(@current_orientation)
-    @table[x][y] = abbreviation.empty? ? 'x' : abbreviation
+    @table.board[x][y] = abbreviation.empty? ? 'x' : abbreviation
   end
 
   def next_x_to_move

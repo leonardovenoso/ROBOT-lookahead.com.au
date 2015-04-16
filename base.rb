@@ -21,8 +21,6 @@ class Base
     @current_orientation  = ''
     @current_position_x   = 0
     @current_position_y   = 0
-
-    #@table = Array.new(ARRAY_SIZE_X) { Array.new(ARRAY_SIZE_Y, 0) }
     @table = Table.new(5, 5)
     @executed_valid_place_command = false
     @print = Print.new

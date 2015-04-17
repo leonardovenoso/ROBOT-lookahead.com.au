@@ -11,6 +11,7 @@ class Robot < Base
   # Params:
   # - command_str: PLACE 0,0,NORTH / move / LEFT / right / REPORT
   def execute(command_str)
+    # get_params: gets the command to be executed. It formats in a hash like {command: 'method_name', options: {} }
     command_hash = @command_recognizer.get_params(command_str)
     command = command_hash[:command]
     options = command_hash[:options]

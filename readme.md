@@ -6,7 +6,7 @@ Rubocop: to remove the offenses (gem install rubocop)
 
 Rspec: to drive the design based on tests
 
-### How to execute?
+### How to execute the software?
 ruby run.rb
 
 ### Commands to move the robot?
@@ -17,25 +17,30 @@ The first command should be a valid place with the following syntax:
 place 0,0, south
 ```
 
+
 > It moves forward
 ```
 move
 ```
+
 
 It rotates 90 degrees to the left of the robot. Take into consideration the direction of the robot's face to choose the ordinal point.
 ```
 left
 ```
 
+
 > It rotates 90 degrees to the right of the robot. Take into consideration the direction of the robot's face to choose the ordinal point.
 ```
 right
 ```
 
+
 It shows where the robot is located.
 ```
 report
 ```
+
 
 > It exits the system
 ```

@@ -64,7 +64,7 @@ class Robot < Base
     x, y = options[:x], options[:y]
     @current_orientation = options[:orientation] unless options[:orientation].nil?
 
-    if x < @table.limit_x && x >= 0 && y < @table.limit_y && y >= 0
+    if x < @table.limit_x && x >= @table.lower_limit_x && y < @table.limit_y && y >= @table.lower_limit_y
       set_current_position(x, y)
       @executed_valid_place_command = true
       print_board

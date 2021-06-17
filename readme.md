@@ -1,5 +1,5 @@
 # Robot exercise
-It a robot simulation walking on a board of 5x5 units. The robot moves in the ordinal directions like North, South, East, West, North East, etc. It also moves forward and rotates 90 degrees.
+The code contains a robot simulating a walk on a board of 5x5 units. The robot moves in the ordinal directions like North, South, East, West, North East, etc. It also moves forward and rotates 90 degrees.
 
 ### Quality test tools:
 Rubocop: to remove the offenses (gem install rubocop)
